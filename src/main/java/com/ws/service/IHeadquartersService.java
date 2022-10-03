@@ -8,4 +8,6 @@ public interface IHeadquartersService {
     Flux<HeadquartersDto> findAll();
     Mono<HeadquartersDto> save(HeadquartersDto headquarter);
     Mono<HeadquartersDto> update(HeadquartersDto headquarter ,Long id);
+
+
 }

@@ -1,6 +1,8 @@
 package com.ws.controller;
 
 import com.ws.entity.dto.LoginDto;
+import com.ws.entity.dto.data.EmployeeResponse;
+import com.ws.entity.dto.data.JwtDataResponse;
 import com.ws.service.IUserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,18 +27,18 @@ public class LoginController {
     private final IUserService userService;
 
     @PostMapping("/login")
-    public Mono<String> jwt(@RequestBody LoginDto login){
+    public Mono<JwtDataResponse> jwt(@RequestBody LoginDto login){
         return  getJWTToken(login);
     }
 
 
-    private Mono<String> getJWTToken(LoginDto login) {
+    private Mono<JwtDataResponse> getJWTToken(LoginDto login) {
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
         return userService.getLogin(login.getUsername(),login.getPassword())
-                .map(userData ->  Jwts
+                .map(userData ->  JwtDataResponse.builder().jwt(Jwts
                             .builder()
                             .setId("BYTES")
                             .claim("authorities",
@@ -49,6 +51,9 @@ public class LoginController {
                             .claim("fullName",userData.getEmployee().getName() + " " + userData.getEmployee().getLastName())
                             .setIssuedAt(new Date(System.currentTimeMillis()))
                             .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact());
+                            .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact())
+                        .employee(new EmployeeResponse(userData.getEmployee()))
+                        .headquarters(userData.getEmployee().getHeadquarters().getName())
+                        .company(userData.getEmployee().getHeadquarters().getCompany().getName()).build());
     }
 }

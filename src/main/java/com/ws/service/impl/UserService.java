@@ -1,6 +1,7 @@
 package com.ws.service.impl;
 
 import com.ws.entity.dto.UserDto;
+import com.ws.entity.dto.data.UserRequest;
 import com.ws.mapper.IUserMapper;
 import com.ws.repository.UserRepository;
 import com.ws.service.IUserService;
@@ -26,8 +27,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Mono<UserDto> save(UserDto userDto) {
-        return Mono.fromCallable(() -> userRepository.save(mapper.toEntity(userDto)))
+    public Mono<UserDto> save(UserRequest userDto) {
+        return Mono.fromCallable(() -> userRepository.save(mapper.dataToEntity(userDto)))
                 .map(mapper::toDto);
     }
 

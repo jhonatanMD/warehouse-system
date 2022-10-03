@@ -2,6 +2,7 @@ package com.ws.business.impl;
 
 import com.ws.business.IUserBusiness;
 import com.ws.entity.dto.UserDto;
+import com.ws.entity.dto.data.UserRequest;
 import com.ws.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class UserBusiness implements IUserBusiness {
     private final IUserService userService;
 
     @Override
-    public Mono<UserDto> createUser(UserDto user, Long company) {
+    public Mono<UserDto> createUser(UserRequest user, Long company) {
         return userService.getUser(user.getUser(),company)
                 .filter(res -> res.equals(Boolean.FALSE))
                 .flatMap(res -> userService.save(user))

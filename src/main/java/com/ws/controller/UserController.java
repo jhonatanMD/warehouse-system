@@ -2,6 +2,7 @@ package com.ws.controller;
 
 import com.ws.business.IUserBusiness;
 import com.ws.entity.dto.UserDto;
+import com.ws.entity.dto.data.UserRequest;
 import com.ws.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public Mono<UserDto> save(@RequestAttribute("company") Long company, @RequestBody UserDto userDto){
+    public Mono<UserDto> save(@RequestAttribute("company") Long company, @RequestBody UserRequest userDto){
         return userBusiness.createUser(userDto,company);
     }
 }

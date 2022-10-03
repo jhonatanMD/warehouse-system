@@ -1,6 +1,7 @@
 package com.ws.service.impl;
 
 import com.ws.entity.dto.StoreDto;
+import com.ws.entity.dto.data.StoreRequest;
 import com.ws.mapper.IStoreMapper;
 import com.ws.repository.StoreRepository;
 import com.ws.service.IStoreService;
@@ -26,8 +27,8 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Mono<StoreDto> save(StoreDto storeDto) {
-        return Mono.fromCallable(() -> storeRepository.save(mapper.toEntity(storeDto)))
+    public Mono<StoreDto> save(StoreRequest storeDto) {
+        return Mono.fromCallable(() -> storeRepository.save(mapper.dataToEntity(storeDto)))
                 .map(mapper::toDto);
     }
 

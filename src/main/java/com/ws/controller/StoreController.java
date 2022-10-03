@@ -1,6 +1,7 @@
 package com.ws.controller;
 
 import com.ws.entity.dto.StoreDto;
+import com.ws.entity.dto.data.StoreRequest;
 import com.ws.service.IStoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class StoreController {
     }
 
     @PostMapping()
-    public Mono<StoreDto> save(@RequestBody StoreDto storeDto){
+    public Mono<StoreDto> save(@RequestBody StoreRequest storeDto){
         return storeService.save(storeDto);
     }
 }
