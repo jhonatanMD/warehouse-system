@@ -3,6 +3,7 @@ package com.ws.mapper;
 import com.ws.entity.PermissionRoleEntity;
 import com.ws.entity.dto.PermissionRoleDto;
 import com.ws.entity.dto.PermissionRoleResponseDto;
+import com.ws.entity.dto.data.PermissionRoleRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -28,4 +29,12 @@ public interface IPermissionRoleMapper {
     @Mapping(target = "u", source = "update")
     @Mapping(target = "d", source = "delete")
     PermissionRoleEntity toEntity(PermissionRoleDto permissionRoleDto);
+
+
+    @Mapping(target = "i", source = "insert")
+    @Mapping(target = "c", source = "consult")
+    @Mapping(target = "u", source = "update")
+    @Mapping(target = "d", source = "delete")
+    @Mapping(target = "modules", source = "module")
+    PermissionRoleEntity toEntity(PermissionRoleRequest permissionRoleRequest);
 }

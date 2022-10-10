@@ -36,6 +36,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 					request.setAttribute("headquarters", claims.get("headquarters"));
 					request.setAttribute("company", claims.get("company"));
 					request.setAttribute("fullName", claims.get("fullName"));
+					request.setAttribute("user", claims.get("user"));
+					request.setAttribute("password", claims.get("password"));
 					setUpSpringAuthentication(claims);
 				} else {
 					SecurityContextHolder.clearContext();

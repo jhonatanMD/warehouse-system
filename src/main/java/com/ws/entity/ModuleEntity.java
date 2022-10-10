@@ -17,6 +17,7 @@ public class ModuleEntity extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Integer index;
     private String name;
 
 }

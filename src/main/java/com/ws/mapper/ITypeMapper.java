@@ -9,4 +9,5 @@ public interface ITypeMapper {
 
     TypeDto toDto(TypeEntity typeEntity);
     TypeEntity toEntity(TypeDto typeDto);
+    TypeEntity toEntity(Long id);
 }

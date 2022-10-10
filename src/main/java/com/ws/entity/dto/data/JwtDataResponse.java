@@ -1,10 +1,11 @@
 package com.ws.entity.dto.data;
 
-import com.ws.entity.dto.EmployeeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -13,7 +14,8 @@ import lombok.NoArgsConstructor;
 public class JwtDataResponse {
 
     private Object jwt;
-    private String headquarters;
-    private String company;
+    private HeadquartersResponse headquarters;
+    private CompanyResponse company;
     private EmployeeResponse employee;
+    private Set<RoleResponse> roles;
 }

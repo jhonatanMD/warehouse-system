@@ -1,5 +1,7 @@
 package com.ws.service.impl;
 
+import com.ws.entity.RoleEntity;
+import com.ws.entity.StoreEntity;
 import com.ws.entity.dto.StoreDto;
 import com.ws.entity.dto.data.StoreRequest;
 import com.ws.mapper.IStoreMapper;
@@ -10,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -23,6 +27,7 @@ public class StoreService implements IStoreService {
     @Override
     public Flux<StoreDto> findAll(Long id) {
         return Flux.fromIterable(storeRepository.findStoreByHeadQuarters(id))
+                .filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -38,4 +43,7 @@ public class StoreService implements IStoreService {
         return Mono.fromCallable(() -> storeRepository.save(mapper.toEntity(storeDto)))
                 .map(mapper::toDto);
     }
+
+    private Predicate<StoreEntity> status = p -> p.getStatus();
+
 }

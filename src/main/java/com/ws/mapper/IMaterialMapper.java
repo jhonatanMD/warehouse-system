@@ -9,4 +9,5 @@ public interface IMaterialMapper {
 
     MaterialDto toDto(MaterialEntity materialEntity);
     MaterialEntity toEntity(MaterialDto materialDto);
+    MaterialEntity toEntity(Long id);
 }

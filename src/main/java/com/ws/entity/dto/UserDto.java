@@ -11,8 +11,6 @@ public class UserDto {
     private String user;
     private String password;
     private Boolean status = true;
-
     private EmployeeDto employee;
-
     private Set<RoleDto> role;
 }

@@ -10,5 +10,6 @@ public interface IStoreMapper {
 
     StoreDto toDto(StoreEntity storeEntity);
     StoreEntity toEntity(StoreDto storeDto);
+    StoreEntity toEntity(Long id);
     StoreEntity dataToEntity(StoreRequest storeRequest);
 }

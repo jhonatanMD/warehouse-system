@@ -9,4 +9,5 @@ public interface RoleRepository extends JpaRepository<RoleEntity,Long> {
 
 
     List<RoleEntity> findByHeadquarters_Id(Long id);
+
 }

@@ -1,5 +1,7 @@
 package com.ws.service.impl;
 
+import com.ws.entity.HeadquartersEntity;
+import com.ws.entity.MaterialEntity;
 import com.ws.entity.dto.MaterialDto;
 import com.ws.mapper.IMaterialMapper;
 import com.ws.repository.MaterialRepository;
@@ -9,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -21,7 +25,9 @@ public class MaterialService implements IMaterialService {
 
     @Override
     public Flux<MaterialDto> findAll(Long id) {
-        return Flux.fromIterable(materialRepository.findByHeadquarters_Id(id)).map(mapper::toDto);
+        return Flux.fromIterable(materialRepository.findByHeadquarters_Id(id))
+                .filter(status::test)
+                .map(mapper::toDto);
     }
 
     @Override
@@ -34,4 +40,7 @@ public class MaterialService implements IMaterialService {
     public Mono<MaterialDto> update(MaterialDto materialDto, Long id) {
         return null;
     }
+
+    private Predicate<MaterialEntity> status = p -> p.getStatus();
+
 }

@@ -9,4 +9,5 @@ public interface IBrandMapper {
 
     BrandDto toDto(BrandEntity brandEntity);
     BrandEntity toEntity(BrandDto brandDto);
+    BrandEntity toEntity(Long id);
 }

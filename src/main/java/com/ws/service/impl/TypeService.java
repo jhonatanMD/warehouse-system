@@ -1,9 +1,9 @@
 package com.ws.service.impl;
 
+import com.ws.entity.SupplierContactEntity;
+import com.ws.entity.TypeEntity;
 import com.ws.entity.dto.TypeDto;
-import com.ws.mapper.ISupplierContactMapper;
 import com.ws.mapper.ITypeMapper;
-import com.ws.repository.SupplierContactRepository;
 import com.ws.repository.TypeRepository;
 import com.ws.service.ITypeService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -24,6 +26,7 @@ public class TypeService implements ITypeService {
     @Override
     public Flux<TypeDto> findAll(Long id) {
         return Flux.fromIterable(typeRepository.findByHeadquarters_Id(id))
+                .filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -37,4 +40,8 @@ public class TypeService implements ITypeService {
     public Mono<TypeDto> update(TypeDto typeDto, Long id) {
         return null;
     }
+
+    private Predicate<TypeEntity> status = p -> p.getStatus();
+
+
 }

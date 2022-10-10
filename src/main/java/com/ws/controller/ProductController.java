@@ -2,6 +2,7 @@ package com.ws.controller;
 
 import com.ws.entity.dto.HeadquartersDto;
 import com.ws.entity.dto.ProductDto;
+import com.ws.entity.dto.data.ProductData;
 import com.ws.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,8 @@ public class ProductController {
 
 
     @PostMapping()
-    public Mono<ProductDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody ProductDto product){
-        product.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
+    public Mono<ProductDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody ProductData product){
+        product.setHeadquarters(headquarters);
         return productService.save(product);
     }
 }

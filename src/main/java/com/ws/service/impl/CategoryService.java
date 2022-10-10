@@ -1,5 +1,7 @@
 package com.ws.service.impl;
 
+import com.ws.entity.BrandEntity;
+import com.ws.entity.CategoryEntity;
 import com.ws.entity.dto.CategoryDto;
 import com.ws.mapper.ICategoryMapper;
 import com.ws.repository.CategoryRepository;
@@ -9,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -21,7 +25,9 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Flux<CategoryDto> findAll(Long id) {
-        return Flux.fromIterable(categoryRepository.findByHeadquarters_Id(id)).map(mapper::toDto);
+        return Flux.fromIterable(categoryRepository.findByHeadquarters_Id(id))
+                .filter(status::test)
+                .map(mapper::toDto);
     }
 
     @Override
@@ -34,4 +40,7 @@ public class CategoryService implements ICategoryService {
     public Mono<CategoryDto> update(CategoryDto categoryDto, Long id) {
         return null;
     }
+
+    private Predicate<CategoryEntity> status = p -> p.getStatus();
+
 }

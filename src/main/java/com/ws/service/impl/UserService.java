@@ -1,5 +1,7 @@
 package com.ws.service.impl;
 
+import com.ws.entity.TypeEntity;
+import com.ws.entity.UserEntity;
 import com.ws.entity.dto.UserDto;
 import com.ws.entity.dto.data.UserRequest;
 import com.ws.mapper.IUserMapper;
@@ -10,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -23,6 +27,7 @@ public class UserService implements IUserService {
     @Override
     public Flux<UserDto> findAll() {
         return Flux.fromIterable(userRepository.findAll())
+                .filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -49,6 +54,9 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> getUser(String userName, Long company) {
-        return Mono.fromCallable(() -> userRepository.findByUserAndEmployee_Headquarters_Company_Id(userName,company).isPresent());
+        return Mono.fromCallable(() -> userRepository.findByUserAndStatusIsTrueAndEmployee_Headquarters_Company_Id(userName,company).isPresent());
     }
+
+    private Predicate<UserEntity> status = p -> p.getStatus();
+
 }

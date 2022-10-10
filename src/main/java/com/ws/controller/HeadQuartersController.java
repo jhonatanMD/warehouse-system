@@ -2,6 +2,7 @@ package com.ws.controller;
 
 import com.ws.entity.dto.CompanyDto;
 import com.ws.entity.dto.HeadquartersDto;
+import com.ws.entity.dto.data.HeadquartersResponse;
 import com.ws.service.IHeadquartersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,8 @@ public class HeadQuartersController {
     private final IHeadquartersService headquartersService;
 
     @GetMapping()
-    public Flux<HeadquartersDto> getAll(){
-        return headquartersService.findAll();
+    public Flux<HeadquartersResponse> getAll(@RequestAttribute("company") Long id){
+        return headquartersService.findAll(id);
     }
 
     @PostMapping()

@@ -1,8 +1,12 @@
 package com.ws.controller;
 
+import com.ws.business.ILoginBusiness;
 import com.ws.entity.dto.LoginDto;
+import com.ws.entity.dto.data.CompanyResponse;
 import com.ws.entity.dto.data.EmployeeResponse;
+import com.ws.entity.dto.data.HeadquartersResponse;
 import com.ws.entity.dto.data.JwtDataResponse;
+import com.ws.entity.dto.data.RoleResponse;
 import com.ws.service.IUserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
@@ -24,11 +30,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final IUserService userService;
+    private final ILoginBusiness loginBusiness;
 
     @PostMapping("/login")
     public Mono<JwtDataResponse> jwt(@RequestBody LoginDto login){
         return  getJWTToken(login);
+    }
+
+    @PostMapping("/refresh")
+    public Mono<JwtDataResponse> refresh(@RequestAttribute("user") String user, @RequestAttribute("password") String pass){
+        return getJWTToken(new LoginDto(user,pass));
     }
 
 
@@ -37,7 +48,7 @@ public class LoginController {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
-        return userService.getLogin(login.getUsername(),login.getPassword())
+        return loginBusiness.getLogin(login.getUsername(),login.getPassword())
                 .map(userData ->  JwtDataResponse.builder().jwt(Jwts
                             .builder()
                             .setId("BYTES")
@@ -49,11 +60,26 @@ public class LoginController {
                             .claim("headquarters",userData.getEmployee().getHeadquarters().getId())
                             .claim("company",userData.getEmployee().getHeadquarters().getCompany().getId())
                             .claim("fullName",userData.getEmployee().getName() + " " + userData.getEmployee().getLastName())
+                            .claim("user",login.getUsername())
+                            .claim("password",login.getPassword())
                             .setIssuedAt(new Date(System.currentTimeMillis()))
                             .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                             .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact())
                         .employee(new EmployeeResponse(userData.getEmployee()))
-                        .headquarters(userData.getEmployee().getHeadquarters().getName())
-                        .company(userData.getEmployee().getHeadquarters().getCompany().getName()).build());
+                        .headquarters(new HeadquartersResponse(userData.getEmployee().getHeadquarters()))
+                        .company(new CompanyResponse(userData.getEmployee().getHeadquarters().getCompany()))
+                        .roles(userData.getRole().stream().map(RoleResponse::new).collect(Collectors.toSet())).build())
+                .flatMap(res ->  Flux.fromIterable(res.getRoles())
+                            .flatMap(role -> loginBusiness.getPermissionRole(role.getId())
+                            .collectList()
+                            .map(permissionRole -> {
+                                role.setPermissionRole(permissionRole);
+                                return role;
+                            }))
+                            .collectList()
+                            .map(roles -> {
+                                res.setRoles(roles.stream().collect(Collectors.toSet()));
+                                return res;
+                            }));
     }
 }
