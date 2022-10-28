@@ -9,7 +9,5 @@ public interface ICategoryMapper {
 
     CategoryDto toDto(CategoryEntity categoryEntity);
     CategoryEntity toEntity(CategoryDto categoryDto);
-
-
     CategoryEntity toEntity(Long id);
 }

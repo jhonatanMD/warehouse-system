@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ProvidersRepository extends JpaRepository<ProvidersEntity, Long> {
 
-    List<ProvidersEntity> findByHeadquarters_Id(Long id);
+    List<ProvidersEntity> findByCompany_Id(Long id);
 }

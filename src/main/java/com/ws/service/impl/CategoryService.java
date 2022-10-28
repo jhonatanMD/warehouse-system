@@ -38,7 +38,9 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Mono<CategoryDto> update(CategoryDto categoryDto, Long id) {
-        return null;
+        categoryDto.setId(id);
+        return Mono.fromCallable(() ->categoryRepository.save(mapper.toEntity(categoryDto)))
+                .map(mapper::toDto);
     }
 
     private Predicate<CategoryEntity> status = p -> p.getStatus();

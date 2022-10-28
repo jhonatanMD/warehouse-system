@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.List;
@@ -27,9 +28,12 @@ public class ProvidersEntity extends Auditable {
     @Column(columnDefinition = "boolean default true")
     private Boolean status = true;
 
-    @OneToOne
-    @JoinColumn(name = "headquarters_id")
-    private HeadquartersEntity headquarters;
+    @ManyToOne
+    private ProductEntity product;
+
+    @ManyToOne
+    @JoinColumn(name="company_id", nullable=false)
+    private CompanyEntity company;
 
     @ManyToMany
     @JoinColumn(name = "supplierContacts_id")

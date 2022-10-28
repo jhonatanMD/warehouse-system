@@ -38,9 +38,7 @@ public class BrandService implements IBrandService {
 
     @Override
     public Mono<BrandDto> update(BrandDto brand, Long id) {
-
         brand.setId(id);
-
         return Mono.fromCallable(() -> brandRepository.save(mapper.toEntity(brand)))
                 .map(mapper::toDto);
     }

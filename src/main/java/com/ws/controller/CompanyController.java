@@ -4,9 +4,12 @@ import com.ws.entity.dto.CompanyDto;
 import com.ws.service.ICompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,7 +28,11 @@ public class CompanyController {
 
     @PostMapping()
     public Mono<CompanyDto> save(@RequestBody CompanyDto company){
-
         return companyService.save(company);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<CompanyDto> update(@PathVariable("id") Long id, @RequestBody CompanyDto company){
+        return companyService.update(company,id);
     }
 }

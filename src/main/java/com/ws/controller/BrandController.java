@@ -5,10 +5,13 @@ import com.ws.entity.dto.HeadquartersDto;
 import com.ws.service.IBrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,5 +32,11 @@ public class BrandController {
     public Mono<BrandDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody BrandDto brand){
         brand.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
         return brandService.save(brand);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<BrandDto> update(@RequestAttribute("headquarters") Long headquarters, @PathVariable("id") Long id, @RequestBody BrandDto brand){
+        brand.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
+        return brandService.update(brand,id);
     }
 }

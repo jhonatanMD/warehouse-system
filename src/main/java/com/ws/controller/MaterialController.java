@@ -4,12 +4,7 @@ import com.ws.entity.dto.HeadquartersDto;
 import com.ws.entity.dto.MaterialDto;
 import com.ws.service.IMaterialService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,5 +25,11 @@ public class MaterialController {
     public Mono<MaterialDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody MaterialDto material){
         material.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
         return materialService.save(material);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<MaterialDto> update(@PathVariable Long id,@RequestAttribute("headquarters") Long headquarters, @RequestBody MaterialDto material){
+        material.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
+        return materialService.update(material,id);
     }
 }

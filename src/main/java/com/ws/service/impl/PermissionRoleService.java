@@ -60,7 +60,6 @@ public class PermissionRoleService implements IPermissionRoleService {
         return Flux.fromIterable(roles)
                 .map(p -> {
                     p.setRole(id);
-
                     return p;
                 })
                 .map(mapper::toEntity)

@@ -13,7 +13,8 @@ public class ProvidersDto {
     private String ruc;
     private Boolean status = true;
 
-    private HeadquartersDto headquarters;
+    private  CompanyDto company;
+    private  ProductDto product;
 
     private List<SupplierContactDto> supplierContacts;
 }

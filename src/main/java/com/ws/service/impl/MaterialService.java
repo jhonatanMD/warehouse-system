@@ -38,7 +38,9 @@ public class MaterialService implements IMaterialService {
 
     @Override
     public Mono<MaterialDto> update(MaterialDto materialDto, Long id) {
-        return null;
+        materialDto.setId(id);
+        return Mono.fromCallable(() -> materialRepository.save(mapper.toEntity(materialDto)))
+                .map(mapper::toDto);
     }
 
     private Predicate<MaterialEntity> status = p -> p.getStatus();

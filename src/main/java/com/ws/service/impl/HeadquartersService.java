@@ -1,6 +1,5 @@
 package com.ws.service.impl;
 
-import com.ws.entity.EmployeeEntity;
 import com.ws.entity.HeadquartersEntity;
 import com.ws.entity.dto.HeadquartersDto;
 import com.ws.entity.dto.data.HeadquartersResponse;
@@ -30,6 +29,7 @@ public class HeadquartersService implements IHeadquartersService {
 
     @Override
     public Mono<HeadquartersDto> save(HeadquartersDto headquarter) {
+        headquarter.setStatus(Boolean.TRUE);
         return Mono.fromCallable(() -> headquartersRepository.save(headquartersMapper.toEntity(headquarter)))
                 .map(headquartersMapper::toDto);
     }

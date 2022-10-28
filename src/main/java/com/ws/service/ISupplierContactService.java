@@ -9,6 +9,7 @@ public interface ISupplierContactService {
     Flux<SupplierContactDto> findAll();
     Mono<SupplierContactDto> save(SupplierContactDto supplierContact);
     Mono<SupplierContactDto> update(SupplierContactDto supplierContact ,Long id);
+    Mono<SupplierContactDto> status(Long id);
 
 
 

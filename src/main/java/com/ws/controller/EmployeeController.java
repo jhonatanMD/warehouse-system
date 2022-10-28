@@ -6,7 +6,9 @@ import com.ws.entity.dto.RoleDto;
 import com.ws.service.IEmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +33,11 @@ public class EmployeeController {
     public Mono<EmployeeDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody EmployeeDto employeeDto){
         employeeDto.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
         return employeeService.save(employeeDto);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<EmployeeDto> update(@RequestAttribute("headquarters") Long headquarters, @PathVariable("id") Long id, @RequestBody EmployeeDto employeeDto){
+        employeeDto.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
+        return employeeService.update(employeeDto,id);
     }
 }

@@ -9,4 +9,5 @@ public interface ICompanyMapper {
 
     CompanyDto toDto(CompanyEntity companyEntity);
     CompanyEntity toEntity(CompanyDto companyDto);
+    CompanyEntity toEntity(Long id);
 }
