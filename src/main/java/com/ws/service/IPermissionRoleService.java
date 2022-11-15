@@ -16,6 +16,7 @@ public interface IPermissionRoleService {
     Flux<PermissionRoleDto> save(List<PermissionRoleRequest> role , Long idRole);
     Mono<Boolean> update(List<PermissionRoleRequest> roles ,Long id);
     Mono<PermissionRoleDto> update(PermissionRoleDto role ,Long id);
+    void delete(Long id);
 
 
 

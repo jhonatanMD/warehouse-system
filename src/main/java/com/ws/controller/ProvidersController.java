@@ -28,13 +28,13 @@ public class ProvidersController {
     }
     @PostMapping()
     public Mono<ProvidersDto> save(@RequestAttribute("company") Long company, @RequestBody ProvidersRequest providers){
-        providers.setCompany(CompanyDto.builder().id(company).build());
+        providers.setCompany(company);
         return providersService.save(providers);
     }
 
     @PutMapping("/{id}")
     public Mono<ProvidersDto> update(@RequestAttribute("company") Long company, @RequestBody ProvidersRequest providers , @PathVariable("id") Long id){
-        providers.setCompany(CompanyDto.builder().id(company).build());
+        providers.setCompany(company);
         return providersService.update(providers,id);
     }
 

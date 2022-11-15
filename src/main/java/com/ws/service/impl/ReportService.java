@@ -1,62 +1,80 @@
 package com.ws.service.impl;
 
+import com.ws.entity.dto.SaleDto;
+import com.ws.entity.dto.SaleReportDto;
 import com.ws.service.IReportService;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import com.ws.service.ISaleService;
+import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReportService implements IReportService {
+
+    private final ISaleService saleService;
     @Override
-    public Mono<JRPdfExporter> reportInvoice() {
-        return Mono.fromCallable(() -> {
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(Arrays.asList(),false);
+    public Mono<JRPdfExporter> reportInvoice(Long saleId) {
+
+       return saleService.findById(saleId)
+                .map(sale -> generarProformaBoleta(sale,"/report/boleta-venta.jrxml"));
+
+    }
+    @Override
+    public Mono<JRPdfExporter> reportBoleta(SaleDto saleDto) {
+        return Mono.fromCallable(() -> generarProformaBoleta(saleDto,"/report/proforma-venta.jrxml"));
+    }
+
+
+    private JRPdfExporter generarProformaBoleta(SaleDto sale, String file){
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(sale.getSaleDetails().stream()
+                    .map(detail ->   new SaleReportDto.ProductSaleDto(detail.getAmount().toString(),
+                            detail.getProductDetail(), detail.getPriceUnit().toString(),detail.getPTotal().toString())).collect(Collectors.toList()),false);
             Map<String, Object> parameters = new HashMap<String, Object>();
 
-            /*
-            parameters.put("razon-social", ordenCompra.getRazonSocial());
-            parameters.put("ruc-empresa",ordenCompra.getRucEmpresa());
-            parameters.put("direccion-empresa",ordenCompra.getDireccionEmpresa());
-            parameters.put("numero-serie",ordenCompra.getNumeroSerie());
-            parameters.put("sres-empresa",ordenCompra.getSresEmpresa());
-            parameters.put("ruc-proveedor",ordenCompra.getRucProveedor());
-            parameters.put("direccion-proveedor",ordenCompra.getDireccionProveedor());
-            parameters.put("fecha",ordenCompra.getFecha());
-            parameters.put("email-proveedor",ordenCompra.getEmailProveedor());
-            parameters.put("telefono1-proveedor",ordenCompra.getTelefono1Proveedor());
-            parameters.put("telefono2-proveedor",ordenCompra.getTelefono2Proveedor());
-            parameters.put("atencion-proveedor",ordenCompra.getAtencionProveedor());
-            parameters.put("cotizacion-proveedor",ordenCompra.getCotizacionProveedor());
-            parameters.put("razon-social", ordenCompra.getRazonSocial());
-            parameters.put("tipo-cuenta", ordenCompra.getTipoCuenta());
-            parameters.put("requerimiento-proveedor",ordenCompra.getRequerimientosProveedor());
-            parameters.put("unidad-proveedor",ordenCompra.getUnidadProveedor());
-            parameters.put("motivo-proveedor",ordenCompra.getMotivoProveedor());
-            parameters.put("formato-pago",ordenCompra.getFormatoPago());
-            parameters.put("plazo-entrega",ordenCompra.getPlazoEntrega());
-            parameters.put("numero-cuenta",ordenCompra.getNumeroCuenta());
-            parameters.put("subTotal",ordenCompra.getSubTotal());
-            parameters.put("igv",ordenCompra.getIgv());
-            parameters.put("totalPagar",ordenCompra.getTotalPagar());
-            parameters.put("total_texto",ordenCompra.getTotalTexto());
-            parameters.put("observacion",ordenCompra.getObservacion());*/
 
-            final InputStream stream = this.getClass().getResourceAsStream("/almacen.jrxml");
-            JasperReport archivo = JasperCompileManager.compileReport(stream);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(archivo,parameters,beanColDataSource);
+            parameters.put("ruc-empresa",sale.getSrs());
+            parameters.put("ruc",sale.getHeadquarters().getCompany().getRut());
+            parameters.put("cod-boleta",sale.getSaleCod());
+            parameters.put("direccion-empresa",sale.getAddress());
+            parameters.put("numero-serie","");
+            parameters.put("area-responsable",sale.getPayCondition());
+            parameters.put("apellido-nombre",sale.getReferralGuide());
+            parameters.put("dni",sale.getCustomerDoc());
+            parameters.put("fecha", LocalDate.now().toString());
+            parameters.put("dia", String.valueOf(LocalDate.now().getDayOfMonth()));
+            parameters.put("mes", LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
+            parameters.put("ano", String.valueOf(LocalDate.now().getYear()));
+            parameters.put("subTotal", "S/ " + sale.getPSubTotal());
+            parameters.put("igv", "S/ " + sale.getPIgv());
+            parameters.put("total", "S/ " + sale.getPTotal());
+
+
+
+            final InputStream stream = this.getClass().getResourceAsStream(file);
+            JasperReport archivo = null;
+            try {
+                archivo = JasperCompileManager.compileReport(stream);
+            } catch (JRException e) {
+                throw new RuntimeException(e);
+            }
+            JasperPrint jasperPrint = null;
+            try {
+                jasperPrint = JasperFillManager.fillReport(archivo,parameters,beanColDataSource);
+            } catch (JRException e) {
+                throw new RuntimeException(e);
+            }
 
             JRPdfExporter exporter = new JRPdfExporter();
             SimplePdfReportConfiguration reportConfigPDF = new SimplePdfReportConfiguration();
@@ -64,6 +82,7 @@ public class ReportService implements IReportService {
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 
             return exporter;
-        });
-    }
+
+        }
+
 }

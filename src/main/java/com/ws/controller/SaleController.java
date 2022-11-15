@@ -5,12 +5,7 @@ import com.ws.entity.dto.HeadquartersDto;
 import com.ws.entity.dto.SaleDto;
 import com.ws.service.ISaleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -31,5 +26,10 @@ public class SaleController {
     public Mono<SaleDto> save(@RequestAttribute("headquarters") Long headquarters, @RequestBody SaleDto sale){
         sale.setHeadquarters(HeadquartersDto.builder().id(headquarters).build());
         return saleBusiness.save(sale);
+    }
+
+    @GetMapping("/id/{id}")
+    public Mono<SaleDto> getById(@PathVariable Long id){
+        return saleBusiness.findById(id);
     }
 }

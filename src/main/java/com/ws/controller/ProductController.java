@@ -22,9 +22,9 @@ public class ProductController {
         return productService.findAll(headquarters);
     }
 
-    @GetMapping("/select")
-    public Flux<ProductDataResponse> get(@RequestAttribute("headquarters") Long headquarters){
-        return productService.find(headquarters);
+    @GetMapping("/select/{id}")
+    public  Mono<ProductDataResponse> getById(@PathVariable("id") Long id){
+        return productService.find(id);
     }
 
 

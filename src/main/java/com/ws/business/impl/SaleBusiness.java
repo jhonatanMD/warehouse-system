@@ -54,6 +54,11 @@ public class SaleBusiness implements ISaleBusiness {
                         r.getId(),sale.getSaleDetails()));
     }
 
+    @Override
+    public Mono<SaleDto> findById(Long id) {
+        return saleService.findById(id);
+    }
+
     public static BigDecimal percentage(BigDecimal base, BigDecimal pct){
         return base.multiply(pct).divide(ONE_HUNDRED);
     }

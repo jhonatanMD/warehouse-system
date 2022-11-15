@@ -40,7 +40,7 @@ public class ProvidersService implements IProvidersService {
 
         if(s.isPresent())
             return Mono.fromCallable(() -> s.get())
-                    .filter(status::test)
+                    //.filter(status::test)
                     .map(mapper::toDto);
 
         return Mono.empty();

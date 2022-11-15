@@ -26,7 +26,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Flux<CategoryDto> findAll(Long id) {
         return Flux.fromIterable(categoryRepository.findByHeadquarters_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 

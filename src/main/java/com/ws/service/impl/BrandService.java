@@ -26,7 +26,7 @@ public class BrandService implements IBrandService {
     @Override
     public Flux<BrandDto> findAll(Long id) {
         return Flux.fromIterable(brandRepository.findByHeadquarters_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 

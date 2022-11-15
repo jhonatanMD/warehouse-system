@@ -1,12 +1,9 @@
 package com.ws.entity.dto.data;
 
-import com.ws.entity.dto.EmployeeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Data
 @Builder
@@ -17,6 +14,6 @@ public class UserRequest {
     private String user;
     private String password;
     private Boolean status = true;
-    private EmployeeDto employee;
-    private Set<Long> role;
+    private Long employee;
+    private Long role;
 }

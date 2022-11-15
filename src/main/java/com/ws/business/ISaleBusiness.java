@@ -8,4 +8,5 @@ public interface ISaleBusiness {
 
     Flux<SaleDto> findAll(Long headquarters);
     Mono<SaleDto> save( SaleDto sale);
+    Mono<SaleDto> findById( Long id);
 }

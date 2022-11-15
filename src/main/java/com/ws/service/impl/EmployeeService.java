@@ -25,7 +25,7 @@ public class EmployeeService implements IEmployeeService {
     @Override
     public Flux<EmployeeDto> findAll(Long id) {
         return Flux.fromIterable(employeeRepository.findByHeadquarters_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 

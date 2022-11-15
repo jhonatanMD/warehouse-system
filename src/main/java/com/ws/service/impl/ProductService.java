@@ -34,21 +34,23 @@ public class ProductService implements IProductService {
     public Flux<ProductDto> findAll(Long id) {
         System.out.println(id);
         return Flux.fromIterable(productRepository.findByStoreHeaders(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 
     @Override
-    public Flux<ProductDataResponse> find(Long id) {
-        return Flux.fromIterable(productRepository.findByStoreHeaders(id))
-                .filter(status::test)
+    public Mono<ProductDataResponse> find(Long id) {
+
+        Optional<ProductEntity> product = productRepository.findById(id);
+        return Mono.fromCallable(()-> product.isPresent() ? product.get() : ProductEntity.builder().status(false).build() )
+                //.filter(status::test)
                 .map(mapper::toData);
     }
 
     @Override
     public Flux<ProductDto> findAllByStore(Long id) {
         return Flux.fromIterable(productRepository.findByStore_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -68,11 +70,7 @@ public class ProductService implements IProductService {
     @Override
     public Mono<ProductDto> update(ProductData product, Long id) {
         product.setId(id);
-        return Mono.fromCallable(() -> productRepository.findProduct(product.getHeadquarters()
-                        ,product.getMiniCode(), product.getStore(),product.getBrand(),product.getCategory()
-                        , product.getMaterial(), product.getType()).size() <= 0)
-                .filter(Boolean::booleanValue)
-                .map(r -> productRepository.save(mapper.toEntity(product)))
+        return Mono.fromCallable(() -> productRepository.save(mapper.toEntity(product)))
                 .map(mapper::toDto);
 
     }

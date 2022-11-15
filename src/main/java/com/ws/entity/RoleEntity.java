@@ -1,6 +1,8 @@
 package com.ws.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +16,8 @@ import javax.persistence.Table;
 @Data
 @Table(name = "role")
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoleEntity  extends Auditable {
 
     @Id
@@ -27,5 +31,7 @@ public class RoleEntity  extends Auditable {
     @JoinColumn(name = "headquarters_id")
     private HeadquartersEntity headquarters;
 
-
+    public RoleEntity(Long id) {
+        this.id = id;
+    }
 }

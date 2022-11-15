@@ -1,7 +1,10 @@
 package com.ws.entity;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +19,9 @@ import java.math.BigDecimal;
 
 @Data
 @Table(name = "product")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class ProductEntity extends Auditable{
 

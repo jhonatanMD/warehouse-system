@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public interface IProductService {
 
     Flux<ProductDto> findAll(Long id);
-    Flux<ProductDataResponse> find(Long id);
+    Mono<ProductDataResponse> find(Long id);
     Flux<ProductDto> findAllByStore(Long id);
     Mono<ProductDto> save(ProductData product);
     Mono<ProductDto> update(ProductData product ,Long id);

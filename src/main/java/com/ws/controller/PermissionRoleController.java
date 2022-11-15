@@ -48,6 +48,9 @@ public class PermissionRoleController {
 
     @PutMapping("/role/{role}")
     public Mono<Boolean> update(@PathVariable Long role,@RequestBody List<PermissionRoleRequest> roles){
+
+        permissionRoleService.delete(role);
+
         return permissionRoleService.update(roles , role);
     }
 }

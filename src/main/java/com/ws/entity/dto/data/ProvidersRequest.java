@@ -1,6 +1,5 @@
 package com.ws.entity.dto.data;
 
-import com.ws.entity.dto.CompanyDto;
 import lombok.Data;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public class ProvidersRequest {
     private String ruc;
     private Boolean status = true;
     private Long product;
-    private CompanyDto company;
+    private Long company;
 
     private List<Long> supplierContacts;
 }

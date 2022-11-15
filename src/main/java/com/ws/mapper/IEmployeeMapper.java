@@ -9,4 +9,5 @@ public interface IEmployeeMapper {
 
     EmployeeDto toDto(EmployeeEntity employeeEntity);
     EmployeeEntity toEntity(EmployeeDto employeeDto);
+    EmployeeEntity toEntity(Long id);
 }

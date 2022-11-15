@@ -23,7 +23,7 @@ public class CompanyService implements ICompanyService {
     @Override
     public Flux<CompanyDto> findAll() {
         return Flux.fromIterable(companyRepository.findAll())
-                .filter(status::test)
+                //.filter(status::test)
                 .map(companyMapper::toDto);
     }
 

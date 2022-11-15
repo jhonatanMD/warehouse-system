@@ -28,7 +28,7 @@ public class PermissionRoleService implements IPermissionRoleService {
     @Override
     public Flux<PermissionRoleDto> findAll() {
         return Flux.fromIterable(permissionRoleRepository.findAll())
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -75,6 +75,11 @@ public class PermissionRoleService implements IPermissionRoleService {
         role.setId(id);
         return Mono.fromCallable(() -> permissionRoleRepository.save(mapper.toEntity(role)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public void delete(Long id) {
+        permissionRoleRepository.deleteByRoleId(id);
     }
 
 

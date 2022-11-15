@@ -1,6 +1,5 @@
 package com.ws.service.impl;
 
-import com.ws.entity.RoleEntity;
 import com.ws.entity.StoreEntity;
 import com.ws.entity.dto.StoreDto;
 import com.ws.entity.dto.data.StoreRequest;
@@ -14,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Predicate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,10 +38,23 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public Mono<StoreDto> update(StoreDto storeDto, Long id) {
+    public Mono<StoreDto> update(StoreRequest storeDto, Long id) {
         storeDto.setId(id);
-        return Mono.fromCallable(() -> storeRepository.save(mapper.toEntity(storeDto)))
+        return Mono.fromCallable(() -> storeRepository.save(mapper.dataToEntity(storeDto)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public Mono<StoreDto> findById(Long id) {
+
+
+        Optional<StoreEntity> store = storeRepository.findById(id);
+
+        if(store.isPresent())
+        return Mono.fromCallable(() -> store.get())
+                .map(mapper::toDto);
+
+        return Mono.empty();
     }
 
     private Predicate<StoreEntity> status = p -> p.getStatus();

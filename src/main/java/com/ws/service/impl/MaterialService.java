@@ -26,7 +26,7 @@ public class MaterialService implements IMaterialService {
     @Override
     public Flux<MaterialDto> findAll(Long id) {
         return Flux.fromIterable(materialRepository.findByHeadquarters_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 

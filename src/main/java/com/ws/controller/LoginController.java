@@ -59,6 +59,7 @@ public class LoginController {
                             .claim("data",userData)
                             .claim("headquarters",userData.getEmployee().getHeadquarters().getId())
                             .claim("company",userData.getEmployee().getHeadquarters().getCompany().getId())
+                            .claim("ruc",userData.getEmployee().getHeadquarters().getCompany().getRut())
                             .claim("fullName",userData.getEmployee().getName() + " " + userData.getEmployee().getLastName())
                             .claim("user",login.getUsername())
                             .claim("password",login.getPassword())
@@ -75,9 +76,7 @@ public class LoginController {
                             .map(permissionRole -> {
                                 role.setPermissionRole(permissionRole);
                                 return role;
-                            }))
-                            .collectList()
-                            .map(roles -> {
+                            })).collectList().map(roles -> {
                                 res.setRoles(roles.stream().collect(Collectors.toSet()));
                                 return res;
                             }));

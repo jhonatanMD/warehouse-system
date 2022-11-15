@@ -1,6 +1,5 @@
 package com.ws.service.impl;
 
-import com.ws.entity.TypeEntity;
 import com.ws.entity.UserEntity;
 import com.ws.entity.dto.UserDto;
 import com.ws.entity.dto.data.UserRequest;
@@ -14,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Predicate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,16 +33,20 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<UserDto> save(UserRequest userDto) {
+
+
+        UserEntity d = mapper.dataToEntity(userDto);
+
         return Mono.fromCallable(() -> userRepository.save(mapper.dataToEntity(userDto)))
                 .map(mapper::toDto);
     }
 
     @Override
-    public Mono<UserDto> update(UserDto userDto, Long id) {
+    public Mono<UserDto> update(UserRequest userDto, Long id) {
 
         userDto.setId(id);
 
-        return Mono.fromCallable(() -> userRepository.save(mapper.toEntity(userDto)))
+        return Mono.fromCallable(() -> userRepository.save(mapper.dataToEntity(userDto)))
                 .map(mapper::toDto);
     }
 
@@ -55,6 +59,17 @@ public class UserService implements IUserService {
     @Override
     public Mono<Boolean> getUser(String userName, Long company) {
         return Mono.fromCallable(() -> userRepository.findByUserAndStatusIsTrueAndEmployee_Headquarters_Company_Id(userName,company).isPresent());
+    }
+
+    @Override
+    public Mono<UserDto> findById(Long id) {
+
+        Optional<UserEntity> user = userRepository.findById(id);
+        if(user.isPresent())
+            return Mono.fromCallable(() -> user.get())
+                    .map(mapper::toDto);
+
+        return Mono.empty();
     }
 
     private Predicate<UserEntity> status = p -> p.getStatus();

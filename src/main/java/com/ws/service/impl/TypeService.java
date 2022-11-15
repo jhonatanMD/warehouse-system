@@ -26,7 +26,7 @@ public class TypeService implements ITypeService {
     @Override
     public Flux<TypeDto> findAll(Long id) {
         return Flux.fromIterable(typeRepository.findByHeadquarters_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(mapper::toDto);
     }
 
@@ -38,7 +38,9 @@ public class TypeService implements ITypeService {
 
     @Override
     public Mono<TypeDto> update(TypeDto typeDto, Long id) {
-        return null;
+        typeDto.setId(id);
+        return Mono.fromCallable(() -> typeRepository.save(mapper.toEntity(typeDto)))
+                .map(mapper::toDto);
     }
 
     private Predicate<TypeEntity> status = p -> p.getStatus();

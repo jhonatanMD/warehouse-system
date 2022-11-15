@@ -23,7 +23,7 @@ public class HeadquartersService implements IHeadquartersService {
     @Override
     public Flux<HeadquartersResponse> findAll(Long id) {
         return Flux.fromIterable(headquartersRepository.findByCompany_Id(id))
-                .filter(status::test)
+                //.filter(status::test)
                 .map(headquartersMapper::toData);
     }
 

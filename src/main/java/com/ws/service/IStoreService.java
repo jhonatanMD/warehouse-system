@@ -9,8 +9,8 @@ public interface IStoreService {
 
     Flux<StoreDto> findAll(Long id);
     Mono<StoreDto> save(StoreRequest storeDto);
-    Mono<StoreDto> update(StoreDto storeDto ,Long id);
+    Mono<StoreDto> update(StoreRequest storeDto ,Long id);
 
-
+    Mono<StoreDto> findById(Long id);
 
 }

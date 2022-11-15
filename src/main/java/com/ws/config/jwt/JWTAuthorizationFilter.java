@@ -38,6 +38,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 					request.setAttribute("fullName", claims.get("fullName"));
 					request.setAttribute("user", claims.get("user"));
 					request.setAttribute("password", claims.get("password"));
+					request.setAttribute("ruc", claims.get("ruc"));
 					setUpSpringAuthentication(claims);
 				} else {
 					SecurityContextHolder.clearContext();

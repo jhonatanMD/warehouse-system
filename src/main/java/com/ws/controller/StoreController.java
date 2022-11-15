@@ -1,15 +1,11 @@
 package com.ws.controller;
 
+import com.ws.entity.dto.SaleDto;
 import com.ws.entity.dto.StoreDto;
 import com.ws.entity.dto.data.StoreRequest;
 import com.ws.service.IStoreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,4 +26,16 @@ public class StoreController {
     public Mono<StoreDto> save(@RequestBody StoreRequest storeDto){
         return storeService.save(storeDto);
     }
+
+    @PutMapping("/{id}")
+    public Mono<StoreDto> update(@PathVariable Long id ,@RequestBody StoreRequest storeDto){
+        return storeService.update(storeDto,id);
+    }
+
+    @GetMapping("/id/{id}")
+    public Mono<StoreDto> getById(@PathVariable Long id){
+        return storeService.findById(id);
+    }
+
+
 }

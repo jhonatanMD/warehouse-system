@@ -36,6 +36,7 @@ public class WarehouseSystemApplication {
                     .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/token/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/reports/**").permitAll()
                     .antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
                    /* .antMatchers(HttpMethod.GET, "/api/generarReporteOrdenSalida").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/generarReporteOrdenCompra").permitAll()
