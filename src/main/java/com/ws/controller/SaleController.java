@@ -2,12 +2,15 @@ package com.ws.controller;
 
 import com.ws.business.ISaleBusiness;
 import com.ws.entity.dto.HeadquartersDto;
+import com.ws.entity.dto.SaleDashBoardDto;
 import com.ws.entity.dto.SaleDto;
 import com.ws.service.ISaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/sale")
@@ -31,5 +34,10 @@ public class SaleController {
     @GetMapping("/id/{id}")
     public Mono<SaleDto> getById(@PathVariable Long id){
         return saleBusiness.findById(id);
+    }
+
+    @GetMapping("/dashboard")
+    public Mono<List<SaleDashBoardDto>> getSaleDashboard(@RequestAttribute("headquarters") Long headquarters){
+        return saleBusiness.getSaleByDate(headquarters);
     }
 }

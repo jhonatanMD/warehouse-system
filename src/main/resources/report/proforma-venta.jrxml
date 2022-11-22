@@ -285,7 +285,7 @@
 				<text><![CDATA[SUB TOTAL: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="404" y="70" width="36" height="21" uuid="716a3259-a9e2-425c-9a6e-aabe0a42beea">
+				<reportElement x="404" y="70" width="49" height="21" uuid="716a3259-a9e2-425c-9a6e-aabe0a42beea">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94d12480-9a1b-4975-8a04-825be87d51ce"/>
 				</reportElement>
 				<box>

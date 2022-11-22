@@ -32,7 +32,7 @@ public class UserEntity extends Auditable {
     private EmployeeEntity employee;
 
 
-    @ManyToMany
+    @OneToOne
     @JoinColumn(name = "role_id")
-    private Set<RoleEntity> role;
+    private RoleEntity role;
 }

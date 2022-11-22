@@ -42,4 +42,5 @@ public class SaleReportDto {
         private String total;
 
     }
+
 }

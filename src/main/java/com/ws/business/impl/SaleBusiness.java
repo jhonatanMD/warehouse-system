@@ -1,6 +1,7 @@
 package com.ws.business.impl;
 
 import com.ws.business.ISaleBusiness;
+import com.ws.entity.dto.SaleDashBoardDto;
 import com.ws.entity.dto.SaleDetailDto;
 import com.ws.entity.dto.SaleDto;
 import com.ws.entity.dto.SaleHistoryDto;
@@ -18,6 +19,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ws.util.Util.percentage;
+
 @Service
 @RequiredArgsConstructor
 public class SaleBusiness implements ISaleBusiness {
@@ -26,7 +29,7 @@ public class SaleBusiness implements ISaleBusiness {
     private final ISaleService saleService;
     private final ISaleHistoryService saleHistoryService;
     private final IProductService productService;
-    public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
 
     @Override
     public Flux<SaleDto> findAll(Long headquarters) {
@@ -59,9 +62,11 @@ public class SaleBusiness implements ISaleBusiness {
         return saleService.findById(id);
     }
 
-    public static BigDecimal percentage(BigDecimal base, BigDecimal pct){
-        return base.multiply(pct).divide(ONE_HUNDRED);
+    @Override
+    public Mono<List<SaleDashBoardDto>>  getSaleByDate(Long headquarters) {
+        return saleService.findSaleByDate(headquarters);
     }
+
 
     private void register(Long id, List<SaleDetailDto> details){
         details.forEach(saleDetailDto -> {

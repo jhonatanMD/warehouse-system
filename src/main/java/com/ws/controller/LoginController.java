@@ -69,15 +69,15 @@ public class LoginController {
                         .employee(new EmployeeResponse(userData.getEmployee()))
                         .headquarters(new HeadquartersResponse(userData.getEmployee().getHeadquarters()))
                         .company(new CompanyResponse(userData.getEmployee().getHeadquarters().getCompany()))
-                        .roles(userData.getRole().stream().map(RoleResponse::new).collect(Collectors.toSet())).build())
-                .flatMap(res ->  Flux.fromIterable(res.getRoles())
+                        .roles(new RoleResponse(userData.getRole())).build())
+                .flatMap(res ->  Mono.just(res.getRoles())
                             .flatMap(role -> loginBusiness.getPermissionRole(role.getId())
                             .collectList()
                             .map(permissionRole -> {
                                 role.setPermissionRole(permissionRole);
                                 return role;
-                            })).collectList().map(roles -> {
-                                res.setRoles(roles.stream().collect(Collectors.toSet()));
+                            })).map(roles -> {
+                                res.setRoles(roles);
                                 return res;
                             }));
     }

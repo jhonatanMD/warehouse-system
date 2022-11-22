@@ -1,5 +1,6 @@
 package com.ws.service.impl;
 
+import com.ws.entity.dto.SaleDetailDto;
 import com.ws.entity.dto.SaleDto;
 import com.ws.entity.dto.SaleReportDto;
 import com.ws.service.IReportService;
@@ -14,10 +15,14 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.ws.util.Util.percentage;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +37,32 @@ public class ReportService implements IReportService {
 
     }
     @Override
-    public Mono<JRPdfExporter> reportBoleta(SaleDto saleDto) {
-        return Mono.fromCallable(() -> generarProformaBoleta(saleDto,"/report/proforma-venta.jrxml"));
+    public Mono<JRPdfExporter> reportBoleta(SaleDto sale) {
+
+        sale.setSaleDetails(sale.getSaleDetails().stream().map(r -> {
+            r.setPTotal(r.getPriceUnit().multiply(BigDecimal.valueOf(r.getAmount())).setScale(2, RoundingMode.FLOOR));
+            return r;
+        }).collect(Collectors.toList()));
+
+        BigDecimal total = BigDecimal.valueOf(sale.getSaleDetails().stream().map(SaleDetailDto::getPTotal).mapToDouble(BigDecimal::doubleValue).sum()).setScale(2,RoundingMode.FLOOR);
+
+        sale.setPTotal(total);
+        sale.setPIgv(percentage(sale.getPTotal(),BigDecimal.valueOf(18)).setScale(2,RoundingMode.FLOOR));
+        sale.setPSubTotal(sale.getPTotal().subtract(sale.getPIgv()).setScale(2,RoundingMode.FLOOR));
+
+
+        return Mono.fromCallable(() -> generarProformaBoleta(sale,"/report/proforma-venta.jrxml"));
+    }
+
+    @Override
+    public Mono<JRPdfExporter> findBySaleByDate(String d1, String d2, Long headquarters,String ruc) {
+
+
+        List<SaleDto> saleDtos = saleService.findBySaleByDate(d1, d2, headquarters);
+
+        BigDecimal total =  BigDecimal.valueOf(saleDtos.stream().map(SaleDto::getPTotal).mapToDouble(BigDecimal::doubleValue).sum()).setScale(2,RoundingMode.FLOOR);
+
+        return Mono.fromCallable(() -> generarReporteFechas(saleDtos,"/report/reporte-venta-fechas.jrxml",ruc,d1,d2,total));
     }
 
 
@@ -84,5 +113,42 @@ public class ReportService implements IReportService {
             return exporter;
 
         }
+
+    private JRPdfExporter generarReporteFechas(List<SaleDto> sales, String file , String ruc,String d1, String d2,BigDecimal total){
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(sales.stream()
+                .map(detail ->   new SaleReportDto.ProductSaleDto(detail.getSaleCod(),
+                        detail.getCustomerDoc() + " - " + detail.getSrs() , null,detail.getPTotal().toString())).collect(Collectors.toList()),false);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+
+
+        parameters.put("ruc-empresa",d1);
+        parameters.put("fecha", d2);
+        parameters.put("ruc",ruc);
+        parameters.put("total", "S/ " +total);
+
+
+
+        final InputStream stream = this.getClass().getResourceAsStream(file);
+        JasperReport archivo = null;
+        try {
+            archivo = JasperCompileManager.compileReport(stream);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+        JasperPrint jasperPrint = null;
+        try {
+            jasperPrint = JasperFillManager.fillReport(archivo,parameters,beanColDataSource);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+
+        JRPdfExporter exporter = new JRPdfExporter();
+        SimplePdfReportConfiguration reportConfigPDF = new SimplePdfReportConfiguration();
+        exporter.setConfiguration(reportConfigPDF);
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+
+        return exporter;
+
+    }
 
 }

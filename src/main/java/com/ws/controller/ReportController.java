@@ -62,4 +62,24 @@ public class ReportController {
 
 
     }
+
+    @GetMapping(value = "/generarReporteVentas/{d1}/{d2}")
+    public Mono<String> generarReporteVentas(HttpServletResponse response ,@PathVariable("d1") String d1,@PathVariable("d2") String d2, @RequestAttribute("ruc") String ruc , @RequestAttribute("headquarters") Long headquarters){
+
+        return reportService.findBySaleByDate(d1,d2,headquarters,ruc)
+                .map(exporter -> {
+                    try {
+                        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+                        response.setHeader("Content-Disposition", "attachment;filename=reporte-venta.pdf");
+                        response.setContentType("application/octet-stream");
+                        exporter.exportReport();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return "LISTO!";
+                });
+
+
+    }
 }

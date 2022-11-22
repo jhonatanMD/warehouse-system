@@ -12,8 +12,7 @@ public interface IUserMapper {
     UserDto toDto(UserEntity userEntity);
     UserEntity toEntity(UserDto storeDto);
 
-    @Mapping(target = "role" , expression = "java(Set.of(new RoleEntity(user.getRole())))")
-    //@Mapping(target = "employee" , source = "employee")
+   // @Mapping(target = "role" , expression = "java(new RoleEntity(user.getRole()))")
     UserEntity dataToEntity(UserRequest user);
 
 

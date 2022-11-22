@@ -17,5 +17,5 @@ public class JwtDataResponse {
     private HeadquartersResponse headquarters;
     private CompanyResponse company;
     private EmployeeResponse employee;
-    private Set<RoleResponse> roles;
+    private RoleResponse roles;
 }
