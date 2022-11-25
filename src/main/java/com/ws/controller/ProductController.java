@@ -4,6 +4,7 @@ import com.ws.entity.dto.ProductDto;
 import com.ws.entity.dto.data.AddProduct;
 import com.ws.entity.dto.data.ProductData;
 import com.ws.entity.dto.data.ProductDataResponse;
+import com.ws.entity.dto.data.ProductStockData;
 import com.ws.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,10 @@ public class ProductController {
     public Mono<ProductDto> addProducts(@RequestBody AddProduct product){
 
         return productService.addProduct(product,"+");
+    }
+
+    @GetMapping("/stock")
+    public Flux<ProductStockData> getAllStock(@RequestAttribute("headquarters") Long headquarters){
+        return productService.findAllStock(headquarters,50L);
     }
 }

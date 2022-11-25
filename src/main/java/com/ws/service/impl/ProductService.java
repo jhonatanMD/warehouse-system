@@ -5,6 +5,7 @@ import com.ws.entity.dto.ProductDto;
 import com.ws.entity.dto.data.AddProduct;
 import com.ws.entity.dto.data.ProductData;
 import com.ws.entity.dto.data.ProductDataResponse;
+import com.ws.entity.dto.data.ProductStockData;
 import com.ws.mapper.IProductMapper;
 import com.ws.repository.ProductRepository;
 import com.ws.service.IProductService;
@@ -92,6 +93,11 @@ public class ProductService implements IProductService {
                 });
     }
 
+    @Override
+    public Flux<ProductStockData> findAllStock(Long id, Long stock) {
+        return Flux.fromIterable(productRepository.findProductStock(id,stock))
+                .map(mapper::toDataStock);
+    }
 
 
     private Predicate<ProductEntity> status = p -> p.getStatus();

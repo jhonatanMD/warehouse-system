@@ -4,6 +4,7 @@ import com.ws.entity.ProductEntity;
 import com.ws.entity.dto.ProductDto;
 import com.ws.entity.dto.data.ProductData;
 import com.ws.entity.dto.data.ProductDataResponse;
+import com.ws.entity.dto.data.ProductStockData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,6 +16,7 @@ public interface IProductMapper {
     ProductEntity toEntity(ProductDto productDto);
     ProductEntity toEntity(ProductData productData);
     ProductEntity toEntity(Long id);
+    ProductStockData toDataStock(ProductEntity productEntity);
 
     @Mapping(target = "category",source = "category.name")
     @Mapping(target = "type",source = "type.name")
