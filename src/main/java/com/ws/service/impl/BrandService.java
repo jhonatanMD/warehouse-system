@@ -1,7 +1,7 @@
 package com.ws.service.impl;
 
 import com.ws.entity.BrandEntity;
-import com.ws.entity.PermissionRoleEntity;
+import com.ws.entity.HeadquartersEntity;
 import com.ws.entity.dto.BrandDto;
 import com.ws.mapper.IBrandMapper;
 import com.ws.repository.BrandRepository;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -41,6 +42,25 @@ public class BrandService implements IBrandService {
         brand.setId(id);
         return Mono.fromCallable(() -> brandRepository.save(mapper.toEntity(brand)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public BrandDto findByName(long id, String name) {
+
+        Optional<BrandEntity> brand = brandRepository.findTopByHeadquartersIdAndName(id,name);
+
+        if(brand.isPresent())
+            return brand.map(mapper::toDto).get();
+
+        return mapper.toDto(brandRepository.save(BrandEntity.builder()
+                .name(name)
+                .description(name)
+                .status(Boolean.TRUE)
+                .headquarters(HeadquartersEntity.builder()
+                        .id(id)
+                        .build())
+                .build()));
+
     }
 
     private Predicate<BrandEntity> status = p -> p.getStatus();

@@ -12,5 +12,6 @@ public interface IBrandService {
     Mono<BrandDto> update(BrandDto brand ,Long id);
 
 
+    BrandDto findByName(long id , String name);
 
 }

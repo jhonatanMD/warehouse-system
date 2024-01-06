@@ -385,7 +385,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[IGV 18% : ]]></text>
+				<text><![CDATA[IGV 18%: ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="404" y="89" width="36" height="21" uuid="c373813b-dc5c-415c-988d-c6bd5751d8c9">

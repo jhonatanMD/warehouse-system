@@ -1,6 +1,5 @@
 package com.ws.entity.dto.data;
 
-import com.ws.entity.dto.PermissionRoleDto;
 import com.ws.entity.dto.PermissionRoleResponseDto;
 import com.ws.entity.dto.RoleDto;
 import lombok.AllArgsConstructor;

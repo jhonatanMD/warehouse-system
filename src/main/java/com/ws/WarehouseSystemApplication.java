@@ -16,6 +16,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class WarehouseSystemApplication {
 
     public static void main(String[] args) {
+
+
+
+
         SpringApplication.run(WarehouseSystemApplication.class, args);
     }
     private static final String[] AUTH_WHITELIST = {
@@ -36,6 +40,7 @@ public class WarehouseSystemApplication {
                     .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/token/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/import").permitAll()
                     .antMatchers(HttpMethod.GET, "/reports/**").permitAll()
                     .antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()
                    /* .antMatchers(HttpMethod.GET, "/api/generarReporteOrdenSalida").permitAll()

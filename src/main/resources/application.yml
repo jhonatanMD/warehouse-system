@@ -1,16 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #url: jdbc:mysql://localhost:3306/warehouse_system?serverTimezone=UTC
-    url: jdbc:mysql://170.249.205.58:3306/tqmzambell_warehouse?serverTimezone=UTC
-    #username: root
-    username: tqmzambell_jmd
-    password: jmd_mysql
-    #password: jhona_mysql
+    url: jdbc:mysql://localhost:3306/system-sales?serverTimezone=UTC
+   #url: jdbc:mysql://170.249.205.58:3306/tqmzambell_warehouse?serverTimezone=UTC
+    username: root
+   # username: tqmzambell_jmd
+    #password: jmd_mysql
+    password: jhona_mysql
   jpa:
     hibernate:
       #ddl-auto: create-drop
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:

@@ -10,6 +10,7 @@ public interface ITypeService {
     Mono<TypeDto> save(TypeDto typeDto);
     Mono<TypeDto> update(TypeDto typeDto ,Long id);
 
+    TypeDto findByName(long id , String name);
 
 
 }

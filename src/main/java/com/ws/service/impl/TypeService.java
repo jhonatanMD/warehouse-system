@@ -1,6 +1,6 @@
 package com.ws.service.impl;
 
-import com.ws.entity.SupplierContactEntity;
+import com.ws.entity.HeadquartersEntity;
 import com.ws.entity.TypeEntity;
 import com.ws.entity.dto.TypeDto;
 import com.ws.mapper.ITypeMapper;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -41,6 +42,24 @@ public class TypeService implements ITypeService {
         typeDto.setId(id);
         return Mono.fromCallable(() -> typeRepository.save(mapper.toEntity(typeDto)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public TypeDto findByName(long id, String name) {
+
+        Optional<TypeEntity> type = typeRepository.findByHeadquartersIdAndName(id,name);
+
+        if(type.isPresent())
+            return type.map(mapper::toDto).get();
+
+        return mapper.toDto(typeRepository.save(TypeEntity.builder()
+                .name(name)
+                .description(name)
+                .status(Boolean.TRUE)
+                .headquarters(HeadquartersEntity.builder()
+                        .id(id)
+                        .build())
+                .build()));
     }
 
     private Predicate<TypeEntity> status = p -> p.getStatus();

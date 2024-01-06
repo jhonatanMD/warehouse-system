@@ -1,7 +1,7 @@
 package com.ws.service.impl;
 
-import com.ws.entity.BrandEntity;
 import com.ws.entity.CategoryEntity;
+import com.ws.entity.HeadquartersEntity;
 import com.ws.entity.dto.CategoryDto;
 import com.ws.mapper.ICategoryMapper;
 import com.ws.repository.CategoryRepository;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Slf4j
@@ -41,6 +42,24 @@ public class CategoryService implements ICategoryService {
         categoryDto.setId(id);
         return Mono.fromCallable(() ->categoryRepository.save(mapper.toEntity(categoryDto)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public CategoryDto findByName(long id, String name) {
+
+        Optional<CategoryEntity> category =categoryRepository.findByHeadquartersIdAndName(id,name);
+
+        if(category.isPresent())
+            return category.map(mapper::toDto).get();
+
+        return mapper.toDto(categoryRepository.save(CategoryEntity.builder()
+                .name(name)
+                .description(name)
+                .status(Boolean.TRUE)
+                .headquarters(HeadquartersEntity.builder()
+                        .id(id)
+                        .build())
+                .build()));
     }
 
     private Predicate<CategoryEntity> status = p -> p.getStatus();

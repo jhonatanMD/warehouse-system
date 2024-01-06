@@ -13,4 +13,5 @@ public interface IStoreService {
 
     Mono<StoreDto> findById(Long id);
 
+    StoreDto findByName(long id , String name);
 }

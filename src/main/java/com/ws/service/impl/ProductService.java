@@ -17,8 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -56,6 +55,25 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public void saveAll(List<ProductData> products) {
+
+        products.forEach(product -> {
+           Optional<ProductEntity> p = productRepository.findProduct(product.getHeadquarters()
+                            ,product.getMiniCode(), product.getStore(),product.getBrand(),product.getCategory()
+                            , product.getMaterial(), product.getType()).stream().findFirst();
+
+           p.ifPresent(pro -> {
+                        product.setId(pro.getId());
+                       productRepository.save(mapper.toEntity(product));
+                   });
+
+           if(!p.isPresent())
+               productRepository.save(mapper.toEntity(product));
+        });
+
+    }
+
+    @Override
     public Mono<ProductDto> save(ProductData product) {
 
        return Mono.fromCallable(() -> productRepository.findProduct(product.getHeadquarters()
@@ -83,7 +101,7 @@ public class ProductService implements IProductService {
         if (!entity.isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Error producto no existe");
 
-        return Mono.fromCallable(() -> entity.get())
+        return Mono.fromCallable(entity::get)
                 .map(product -> {
                     if(flag.equals("+"))
                         product.setStock(product.getStock() + addProduct.getCant());

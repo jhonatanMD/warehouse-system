@@ -10,6 +10,7 @@ public interface IMaterialService {
     Mono<MaterialDto> save(MaterialDto materialDto);
     Mono<MaterialDto> update(MaterialDto materialDto ,Long id);
 
+    MaterialDto findByName(long id , String name);
 
 
 }

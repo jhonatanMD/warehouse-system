@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Predicate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -41,6 +42,22 @@ public class MaterialService implements IMaterialService {
         materialDto.setId(id);
         return Mono.fromCallable(() -> materialRepository.save(mapper.toEntity(materialDto)))
                 .map(mapper::toDto);
+    }
+
+    @Override
+    public MaterialDto findByName(long id, String name) {
+
+        Optional<MaterialEntity> material = materialRepository.findByHeadquartersIdAndName(id, name);
+
+        if(material.isPresent())
+            return material.map(mapper::toDto).get();
+
+        return mapper.toDto(materialRepository.save(MaterialEntity.builder()
+                        .name(name)
+                        .description(name)
+                        .status(Boolean.TRUE)
+                        .headquarters(HeadquartersEntity.builder().id(id).build())
+                        .build()));
     }
 
     private Predicate<MaterialEntity> status = p -> p.getStatus();

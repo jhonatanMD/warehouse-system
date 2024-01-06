@@ -8,6 +8,8 @@ import com.ws.entity.dto.data.ProductStockData;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 public interface IProductService {
 
     Flux<ProductDto> findAll(Long id);
@@ -19,6 +21,7 @@ public interface IProductService {
 
     Flux<ProductStockData> findAllStock(Long id , Long stock);
 
+    void saveAll(List<ProductData> products);
 
 
 }

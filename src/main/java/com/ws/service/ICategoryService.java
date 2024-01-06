@@ -10,6 +10,6 @@ public interface ICategoryService {
     Mono<CategoryDto> save(CategoryDto categoryDto);
     Mono<CategoryDto> update(CategoryDto categoryDto ,Long id);
 
-
+    CategoryDto findByName(long id , String name);
 
 }

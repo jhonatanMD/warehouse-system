@@ -1,5 +1,6 @@
 package com.ws.service.impl;
 
+import com.ws.entity.HeadquartersEntity;
 import com.ws.entity.StoreEntity;
 import com.ws.entity.dto.StoreDto;
 import com.ws.entity.dto.data.StoreRequest;
@@ -12,8 +13,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Predicate;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -55,6 +57,23 @@ public class StoreService implements IStoreService {
                 .map(mapper::toDto);
 
         return Mono.empty();
+    }
+
+    @Override
+    public StoreDto findByName(long id, String name) {
+
+        Optional<StoreEntity> store = storeRepository.findByHeadquartersIdAndName(id,name);
+
+        if(store.isPresent())
+            return store.map(mapper::toDto).get();
+
+        return mapper.toDto(storeRepository.save(StoreEntity.builder()
+                .name(name)
+                .status(Boolean.TRUE)
+                .headquarters(Set.of(HeadquartersEntity.builder()
+                        .id(id)
+                        .build()))
+                .build()));
     }
 
     private Predicate<StoreEntity> status = p -> p.getStatus();
