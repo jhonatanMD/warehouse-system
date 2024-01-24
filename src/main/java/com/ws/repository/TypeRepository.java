@@ -13,6 +13,6 @@ public interface TypeRepository extends JpaRepository<TypeEntity, Long> {
     List<TypeEntity> findByHeadquarters_Id(Long id);
 
 
-    @Query(value = "SELECT t.* FROM Type t WHERE t.headquarters_id = :id AND TRIM(UPPER(t.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
+    @Query(value = "SELECT t.* FROM type t WHERE t.headquarters_id = :id AND TRIM(UPPER(t.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
     Optional<TypeEntity> findByHeadquartersIdAndName(@Param("id") Long id , @Param("name")String name);
 }

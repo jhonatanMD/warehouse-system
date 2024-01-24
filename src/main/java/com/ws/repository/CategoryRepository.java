@@ -13,6 +13,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
     List<CategoryEntity> findByHeadquarters_Id(Long id);
 
 
-    @Query(value = "SELECT t.* FROM Category t WHERE t.headquarters_id = :id AND TRIM(UPPER(t.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
+    @Query(value = "SELECT t.* FROM category t WHERE t.headquarters_id = :id AND TRIM(UPPER(t.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
     Optional<CategoryEntity> findByHeadquartersIdAndName(@Param("id") Long id , @Param("name")String name);
 }
