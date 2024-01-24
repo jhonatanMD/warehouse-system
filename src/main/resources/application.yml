@@ -5,8 +5,10 @@ spring:
     #url: jdbc:mysql://dehwqyoviirr1prt:ms4ftbhysy97u65x@n2o93bb1bwmn0zle.chr7pe7iynqr.eu-west-1.rds.amazonaws.com:3306/wszkt68lcslqibn4?serverTimezone=UTC
     url: jdbc:mysql://170.249.205.58:3306/tqmzambell_system?serverTimezone=UTC
     #username: root
-    username: tqmzambell_test
-    password: jmd_test
+    #username: tqmzambell_test
+    #password: jmd_test
+    username: tqmzambell_warehouse
+    password: ware_house123
     #password: jhona_mysql
   jpa:
     hibernate:
