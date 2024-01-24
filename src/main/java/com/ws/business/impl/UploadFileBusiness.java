@@ -29,8 +29,8 @@ public class UploadFileBusiness implements IUploadFileBusiness {
     private final IStoreService storeService;
     @Override
     @Transactional
-    public void upload(MultipartFile file) {
-        long headquarters = 2;
+    public void upload(MultipartFile file , Long headquarters) {
+
        ValidateExcelDataDto res = readExcelFactory.get(file);
 
        productService.saveAll(res.getProductData().getData().stream()

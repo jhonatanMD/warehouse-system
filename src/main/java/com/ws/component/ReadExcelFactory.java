@@ -72,8 +72,17 @@ public class ReadExcelFactory {
            productData.setData(new ArrayList<>());
           if(errors.isEmpty()){
               for (int i = 0; i < values.length ; i++) {
-                    productData.getData().add(UploadExcelDataDto.builder().code(values[i][0]).brand(values[i][1]).category(values[i][2]).name(values[i][3]).type(values[i][4]).material(values[i][5])
-                            .stock(values[i][7]).price(values[i][8]).store(values[i][10]).build());
+                    productData.getData().add(UploadExcelDataDto.builder()
+                            .code(values[i][0])
+                            .brand(values[i][1])
+                            .name(values[i][2])
+                            .category(values[i][3])
+                            .type(values[i][4])
+                            .material(values[i][5])
+                            .status(values[i][6])
+                            .stock(values[i][7])
+                            .price(values[i][8])
+                            .store(values[i][10]).build());
               }
           }
 

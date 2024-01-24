@@ -13,6 +13,6 @@ public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
     List<BrandEntity> findByHeadquarters_Id(Long id);
 
 
-    @Query(value = "SELECT b.* FROM Brand b WHERE b.headquarters_id = :id AND TRIM(UPPER(b.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
+    @Query(value = "SELECT b.* FROM brand b WHERE b.headquarters_id = :id AND TRIM(UPPER(b.name)) LIKE TRIM(UPPER(:name))" , nativeQuery = true)
     Optional<BrandEntity> findTopByHeadquartersIdAndName(@Param("id") Long id , @Param("name")String name);
 }
